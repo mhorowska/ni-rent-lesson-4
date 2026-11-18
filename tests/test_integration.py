@@ -26,3 +26,14 @@ def test_tenants_loaded_properly():
 
     for tenant_key, tenant in manager.tenants.items():
         assert tenant.name in expected_names, f"Nieoczekiwany najemca: {tenant.name}"
+
+def test_tenants_apartments_assignment():
+    parameters = Parameters()
+    manager = Manager(parameters)
+    
+    assert manager.validate_tenants_apartments() is True, "Wszyscy najemcy powinni mieć przypisane istniejące mieszkania"
+    
+    first_tenant_key = list(manager.tenants.keys())[0]
+    manager.tenants[first_tenant_key].apartment = "nieistniejace-mieszkanie"
+    
+    assert manager.validate_tenants_apartments() is False, "Metoda powinna wykryć przypisanie do nieistniejącego mieszkania"
